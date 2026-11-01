@@ -22,9 +22,10 @@ javac -source 8 -target 8 -bootclasspath "$JAR" -d "$OUT/classes" \
 find "$OUT/classes" -name '*.class' > "$OUT/classlist.txt"
 "$BT/d8" --lib "$JAR" --min-api 24 --output "$OUT/dex" @"$OUT/classlist.txt"
 
+# 用目标包名重写 manifest，保证 .MainActivity 这类别名解析成 <PKG>.MainActivity
+sed "s|package=\"com.djkk.browser\"|package=\"$PKG\"|" AndroidManifest.xml > "$OUT/AndroidManifest.xml"
 "$BT/aapt2" link -o "$OUT/base.apk" -I "$JAR" \
-  --manifest AndroidManifest.xml \
-  --rename-manifest-package "$PKG" \
+  --manifest "$OUT/AndroidManifest.xml" \
   --min-sdk-version 24 --target-sdk-version 33
 
 (cd "$OUT/dex" && zip -q "../base.apk" classes.dex)
