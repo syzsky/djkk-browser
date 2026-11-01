@@ -7,8 +7,6 @@ on:
         description: "车机白名单包名（默认 com.baidu.searchbox）"
         required: false
         default: "com.baidu.searchbox"
-  push:
-    branches: [ main ]
 
 jobs:
   build:
